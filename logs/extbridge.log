@@ -19,3 +19,24 @@
 {"level":"error","message":"トークン検証エラー: callback is not a function","service":"extbridge","timestamp":"2025-05-17 18:03:57"}
 {"level":"warn","message":"アクセス拒否: ユーザー test@example.com (user) は必要な権限を持っていません","service":"extbridge","timestamp":"2025-05-17 18:03:57"}
 {"level":"warn","message":"アクセス拒否: ユーザー test@example.com (admin) は必要な権限を持っていません","service":"extbridge","timestamp":"2025-05-17 18:03:57"}
+{"level":"error","message":"GitHub API エラー (getUserInfo): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"GitHub API エラー (getUserInfo): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"GitHub API エラー (getRepositories): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"GitHub API エラー (getRepositories): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"GitHub API エラー (getRepositories): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"GitHub API エラー (getRepository): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"GitHub API エラー (getRepository): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Figma API エラー (getUserInfo): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Figma API エラー (getUserInfo): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Slack API エラー (getUserInfo): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Slack API エラー (getUserInfo): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Slack API エラー (getUserInfo): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Slack API エラー (getChannels): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Slack API エラー (getChannels): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Slack API エラー (getChannels): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"Slack API エラー (getChannels): Cannot read properties of undefined (reading 'get')","service":"extbridge","timestamp":"2025-05-17 18:11:35"}
+{"level":"error","message":"トークン検証エラー: callback is not a function","service":"extbridge","timestamp":"2025-05-17 18:11:36"}
+{"level":"warn","message":"認証トークンが提供されていません","service":"extbridge","timestamp":"2025-05-17 18:11:36"}
+{"level":"error","message":"トークン検証エラー: callback is not a function","service":"extbridge","timestamp":"2025-05-17 18:11:36"}
+{"level":"warn","message":"アクセス拒否: ユーザー test@example.com (user) は必要な権限を持っていません","service":"extbridge","timestamp":"2025-05-17 18:11:36"}
+{"level":"warn","message":"アクセス拒否: ユーザー test@example.com (admin) は必要な権限を持っていません","service":"extbridge","timestamp":"2025-05-17 18:11:36"}

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>0/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>0/4</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>0/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -123,22 +123,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -163,8 +160,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,25 +172,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * ExtBridge - ロガーユーティリティ
  * アプリケーション全体で一貫したログ記録を提供します
  */
 &nbsp;
-const winston = require('winston');
-const config = require('../../config/default');
-const fs = require('fs');
-const path = require('path');
+const winston = <span class="cstat-no" title="statement not covered" >require('winston');</span>
+const config = <span class="cstat-no" title="statement not covered" >require('../../config/default');</span>
+const fs = <span class="cstat-no" title="statement not covered" >require('fs');</span>
+const path = <span class="cstat-no" title="statement not covered" >require('path');</span>
 &nbsp;
 // ログディレクトリの確認と作成
-const logDir = path.dirname(config.logging.file);
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir, { recursive: true });
+const logDir = <span class="cstat-no" title="statement not covered" >path.dirname(config.logging.file);</span>
+<span class="cstat-no" title="statement not covered" >if (!fs.existsSync(logDir)) {</span>
+<span class="cstat-no" title="statement not covered" >  fs.mkdirSync(logDir, { recursive: true });</span>
 }
 &nbsp;
 // ロガーの設定
-const logger = winston.createLogger({
+const logger = <span class="cstat-no" title="statement not covered" >winston.createLogger({</span>
   level: config.logging.level,
   format: winston.format.combine(
     winston.format.timestamp({
@@ -218,8 +218,8 @@ const logger = winston.createLogger({
 });
 &nbsp;
 // 開発環境の場合はコンソールにも出力
-<span class="missing-if-branch" title="else path not taken" >E</span>if (config.server.env !== 'production') {
-  logger.add(new winston.transports.Console({
+<span class="cstat-no" title="statement not covered" >if (config.server.env !== 'production') {</span>
+<span class="cstat-no" title="statement not covered" >  logger.add(new winston.transports.Console({</span>
     format: winston.format.combine(
       winston.format.colorize(),
       winston.format.simple()
@@ -227,7 +227,7 @@ const logger = winston.createLogger({
   }));
 }
 &nbsp;
-module.exports = logger;
+<span class="cstat-no" title="statement not covered" >module.exports = logger;</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -235,7 +235,7 @@ module.exports = logger;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-17T09:04:02.981Z
+                at 2025-05-17T09:20:17.013Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

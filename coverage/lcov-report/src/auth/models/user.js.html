@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.84% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/13</span>
+                <span class='fraction'>0/13</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.63% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/11</span>
+                <span class='fraction'>0/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -177,10 +177,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -265,31 +265,31 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
  * ExtBridge - ユーザーモデル
  * システムのユーザー情報を管理します
  */
 &nbsp;
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = <span class="cstat-no" title="statement not covered" >require('mongoose');</span>
+const Schema = <span class="cstat-no" title="statement not covered" >mongoose.Schema;</span>
 &nbsp;
-const UserSchema = new Schema({
+const UserSchema = <span class="cstat-no" title="statement not covered" >new Schema({</span>
   // 基本情報
   email: {
     type: String,
@@ -374,22 +374,22 @@ const UserSchema = new Schema({
 });
 &nbsp;
 // 更新時に updatedAt を自動更新
-UserSchema.pre('save', <span class="fstat-no" title="function not covered" >fu</span>nction(next) {
+<span class="cstat-no" title="statement not covered" >UserSchema.pre('save', <span class="fstat-no" title="function not covered" >fu</span>nction(next) {</span>
 <span class="cstat-no" title="statement not covered" >  this.updatedAt = Date.now();</span>
 <span class="cstat-no" title="statement not covered" >  next();</span>
 });
 &nbsp;
 // ユーザーが特定のサービスに接続しているかを確認するメソッド
-UserSchema.methods.isConnectedTo = <span class="fstat-no" title="function not covered" >fu</span>nction(serviceName) {
+<span class="cstat-no" title="statement not covered" >UserSchema.methods.isConnectedTo = <span class="fstat-no" title="function not covered" >fu</span>nction(serviceName) {</span>
 <span class="cstat-no" title="statement not covered" >  return this.connectedServices.some(<span class="fstat-no" title="function not covered" >se</span>rvice =&gt; <span class="cstat-no" title="statement not covered" >service.service === serviceName)</span>;</span>
 };
 &nbsp;
 // サービス接続情報を取得するメソッド
-UserSchema.methods.getServiceConnection = <span class="fstat-no" title="function not covered" >fu</span>nction(serviceName) {
+<span class="cstat-no" title="statement not covered" >UserSchema.methods.getServiceConnection = <span class="fstat-no" title="function not covered" >fu</span>nction(serviceName) {</span>
 <span class="cstat-no" title="statement not covered" >  return this.connectedServices.find(<span class="fstat-no" title="function not covered" >se</span>rvice =&gt; <span class="cstat-no" title="statement not covered" >service.service === serviceName)</span>;</span>
 };
 &nbsp;
-module.exports = mongoose.model('User', UserSchema);
+<span class="cstat-no" title="statement not covered" >module.exports = mongoose.model('User', UserSchema);</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -397,7 +397,7 @@ module.exports = mongoose.model('User', UserSchema);
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-17T09:04:02.981Z
+                at 2025-05-17T09:20:17.013Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
