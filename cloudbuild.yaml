@@ -1,0 +1,70 @@
+steps:
+# Node.jsの依存関係をインストール
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['ci']
+  id: 'install-dependencies'
+
+# テストを実行
+- name: 'gcr.io/cloud-builders/npm'
+  args: ['test']
+  id: 'run-tests'
+  waitFor: ['install-dependencies']
+
+# Dockerイメージをビルド
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/extbridge:$COMMIT_SHA', '.']
+  id: 'build-image'
+  waitFor: ['run-tests']
+
+# イメージをContainer Registryにプッシュ
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/extbridge:$COMMIT_SHA']
+  id: 'push-image'
+  waitFor: ['build-image']
+
+# Cloud Runにデプロイ
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args:
+    - 'run'
+    - 'deploy'
+    - 'extbridge-${_ENVIRONMENT}'
+    - '--image=gcr.io/$PROJECT_ID/extbridge:$COMMIT_SHA'
+    - '--platform=managed'
+    - '--region=${_REGION}'
+    - '--allow-unauthenticated'
+    - '--set-env-vars=NODE_ENV=${_ENVIRONMENT},PORT=8080'
+    - '--set-secrets=MONGODB_URI=mongodb-uri:latest,JWT_SECRET=jwt-secret:latest,SAML_ENTRY_POINT=saml-entry-point:latest,SAML_ISSUER=saml-issuer:latest,SAML_CALLBACK_URL=saml-callback-url:latest,GITHUB_CLIENT_ID=github-client-id:latest,GITHUB_CLIENT_SECRET=github-client-secret:latest,GITHUB_CALLBACK_URL=github-callback-url:latest,FIGMA_CLIENT_ID=figma-client-id:latest,FIGMA_CLIENT_SECRET=figma-client-secret:latest,FIGMA_CALLBACK_URL=figma-callback-url:latest,SLACK_CLIENT_ID=slack-client-id:latest,SLACK_CLIENT_SECRET=slack-client-secret:latest,SLACK_CALLBACK_URL=slack-callback-url:latest'
+  id: 'deploy-cloud-run'
+  waitFor: ['push-image']
+
+# 最新のタグも付与
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'gcr.io/$PROJECT_ID/extbridge:$COMMIT_SHA', 'gcr.io/$PROJECT_ID/extbridge:latest']
+  waitFor: ['push-image']
+
+# 最新タグをプッシュ
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/extbridge:latest']
+  waitFor: ['deploy-cloud-run']
+
+# キャッシュを設定
+options:
+  env:
+    - 'NODE_ENV=${_ENVIRONMENT}'
+  volumes:
+    - name: 'node_modules'
+      path: '/workspace/node_modules'
+
+# 環境変数の設定
+substitutions:
+  _ENVIRONMENT: 'production'  # デフォルト値
+  _REGION: 'asia-northeast1'  # デフォルト値
+
+# イメージをアーティファクトとして保存
+images:
+  - 'gcr.io/$PROJECT_ID/extbridge:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/extbridge:latest'
+
+# ビルドのタイムアウト設定
+timeout: '1800s'  # 30分

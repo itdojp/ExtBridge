@@ -25,7 +25,7 @@
 
 ### 1.1 背景と目的
 
-本検証は、Exticを活用した個人契約クラウドサービス管理システム「ExtBridge」の構築において、技術的な実現可能性と有効性を確認するために実施するものである。システム設計・開発着手前に、主要な機能や連携方式が要件を満たすことを確認し、潜在的な課題や制限事項を早期に特定することを目的とする。
+本検証は、Exticを活用した個人契約クラウドサービス管理システム「ExtBridge」の構築において、技術的な実現可能性と有効性を確認するために実施するものです。システム設計・開発着手前に、主要な機能や連携方式が要件を満たすことを確認し、潜在的な課題や制限事項を早期に特定することを目的とします。
 
 ### 1.2 検証の位置づけ
 
@@ -407,3 +407,125 @@
 | 検証責任者 |  |  |
 | プロジェクト責任者 |  |  |
 | IT部門責任者 |  |  |
+
+## 11. デプロイ手順
+
+### 11.1 Google Cloud Runへのデプロイ
+
+#### 11.1.1 前提条件
+
+- Google Cloud Platform (GCP)アカウント
+- Google Cloud SDKのインストール
+- Dockerのインストール
+- 必要な権限：
+  - Cloud Run Admin
+  - Storage Admin
+  - Service Account User
+
+#### 11.1.2 環境変数の設定
+
+以下の環境変数をGoogle Cloud Runサービスに設定する必要があります：
+
+| 環境変数 | 説明 | 例 |
+|------|------|------|
+| NODE_ENV | 実行環境 | production |
+| PORT | アプリケーションポート | 8080 |
+| MONGODB_URI | MongoDB接続文字列 | mongodb+srv://user:password@cluster.mongodb.net/extbridge |
+| JWT_SECRET | JWT署名用シークレット | (ランダム文字列) |
+| SAML_ENTRY_POINT | SAML IdPエントリーポイント | `https://extic.example.com/saml2/idp/SSOService.php` |
+| SAML_ISSUER | SAML発行者ID | extbridge-saml |
+| SAML_CALLBACK_URL | SAMLコールバックURL | `https://extbridge-xxxxx.run.app/auth/saml/callback` |
+| GITHUB_CLIENT_ID | GitHub OAuth App ID | (GitHub Developer Settingsから取得) |
+| GITHUB_CLIENT_SECRET | GitHub OAuth App Secret | (GitHub Developer Settingsから取得) |
+| GITHUB_CALLBACK_URL | GitHub OAuthコールバックURL | `https://extbridge-xxxxx.run.app/api/services/github/callback` |
+| FIGMA_CLIENT_ID | Figma OAuth App ID | (Figma Developer Settingsから取得) |
+| FIGMA_CLIENT_SECRET | Figma OAuth App Secret | (Figma Developer Settingsから取得) |
+| FIGMA_CALLBACK_URL | Figma OAuthコールバックURL | `https://extbridge-xxxxx.run.app/api/services/figma/callback` |
+| SLACK_CLIENT_ID | Slack App ID | (Slack App Settingsから取得) |
+| SLACK_CLIENT_SECRET | Slack App Secret | (Slack App Settingsから取得) |
+| SLACK_CALLBACK_URL | Slack OAuthコールバックURL | `https://extbridge-xxxxx.run.app/api/services/slack/callback` |
+
+#### 11.1.3 手動デプロイ手順
+
+1. **プロジェクトのクローン**
+
+   ```bash
+   git clone https://github.com/your-org/extbridge.git
+   cd extbridge
+   ```
+
+2. **Dockerイメージのビルド**
+
+   ```bash
+   docker build -t gcr.io/[PROJECT_ID]/extbridge:latest .
+   ```
+
+3. **Google Container Registryへのプッシュ**
+
+   ```bash
+   gcloud auth configure-docker
+   docker push gcr.io/[PROJECT_ID]/extbridge:latest
+   ```
+
+4. **Cloud Runへのデプロイ**
+
+   ```bash
+   gcloud run deploy extbridge \
+     --image gcr.io/[PROJECT_ID]/extbridge:latest \
+     --platform managed \
+     --region [REGION] \
+     --allow-unauthenticated \
+     --set-env-vars="NODE_ENV=production,PORT=8080,[その他の環境変数]"
+   ```
+
+5. **デプロイの確認**
+
+   ```bash
+   gcloud run services describe extbridge --platform managed --region [REGION]
+   ```
+
+#### 11.1.4 CI/CDによる自動デプロイ
+
+GitHub Actionsを使用した自動デプロイが設定されています。以下のシークレットをGitHubリポジトリに設定する必要があります：
+
+| シークレット名 | 説明 |
+|------|------|
+| GCP_PROJECT_ID | Google CloudプロジェクトのプロジェクトID |
+| GCP_SA_KEY | サービスアカウントキー（JSON形式、Base64エンコード） |
+| GCP_REGION | デプロイするリージョン（例：asia-northeast1） |
+| MONGODB_URI | MongoDB接続文字列 |
+| JWT_SECRET | JWT署名用シークレット |
+| SAML_ENTRY_POINT | SAML IdPエントリーポイント |
+| SAML_ISSUER | SAML発行者ID |
+| SAML_CALLBACK_URL | SAMLコールバックURL |
+| GITHUB_CLIENT_ID | GitHub OAuth App ID |
+| GITHUB_CLIENT_SECRET | GitHub OAuth App Secret |
+| GITHUB_CALLBACK_URL | GitHub OAuth コールバックURL |
+| FIGMA_CLIENT_ID | Figma OAuth App ID |
+| FIGMA_CLIENT_SECRET | Figma OAuth App Secret |
+| FIGMA_CALLBACK_URL | Figma OAuth コールバックURL |
+| SLACK_CLIENT_ID | Slack App ID |
+| SLACK_CLIENT_SECRET | Slack App Secret |
+| SLACK_CALLBACK_URL | Slack OAuth コールバックURL |
+
+自動デプロイの流れ：
+
+1. mainブランチへのプッシュまたはプルリクエストのマージ
+2. GitHub Actionsワークフローの起動
+3. テストの実行
+4. Dockerイメージのビルドとプッシュ
+5. Cloud Runへのデプロイ
+
+#### 11.1.5 デプロイ後の設定
+
+1. **カスタムドメインの設定**
+   - Cloud Run管理コンソールからカスタムドメインをマッピング
+   - DNSレコードの更新
+
+2. **モニタリングの設定**
+   - Cloud Monitoringでアラートを設定
+   - ログエクスポートの設定
+
+3. **バックアップ戦略**
+   - データベースの定期バックアップを設定
+   - 環境変数の安全な保管

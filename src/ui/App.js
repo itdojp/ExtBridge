@@ -8,7 +8,8 @@ import { blue, pink } from '@material-ui/core/colors';
 import Header from './components/Header';
 import Dashboard from './pages/Dashboard';
 import GitHubRepositories from './pages/GitHubRepositories';
-// 他のページコンポーネントは必要に応じてインポート
+import FigmaProjects from './pages/FigmaProjects';
+import SlackChannels from './pages/SlackChannels';
 
 // テーマの設定
 const theme = createMuiTheme({
@@ -103,7 +104,8 @@ const App = () => {
           <Route path="/login" render={(props) => authenticated ? <Redirect to="/dashboard" /> : <div>Login Page</div>} />
           <PrivateRoute path="/dashboard" component={Dashboard} authenticated={authenticated} />
           <PrivateRoute path="/github/repositories" component={GitHubRepositories} authenticated={authenticated} />
-          {/* 他のプライベートルートをここに追加 */}
+          <PrivateRoute path="/figma/projects" component={FigmaProjects} authenticated={authenticated} />
+          <PrivateRoute path="/slack/channels" component={SlackChannels} authenticated={authenticated} />
           <Route path="*" render={() => <div>404 Not Found</div>} />
         </Switch>
       </Router>
