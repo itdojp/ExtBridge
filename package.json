@@ -1,0 +1,36 @@
+{
+  "name": "extbridge",
+  "version": "0.1.0",
+  "description": "ExtBridge - 個人契約クラウドサービス管理システム",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "passport": "^0.6.0",
+    "passport-saml": "^3.2.4",
+    "dotenv": "^16.0.3",
+    "axios": "^1.3.4",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
+    "winston": "^3.8.2",
+    "cors": "^2.8.5",
+    "helmet": "^6.1.5"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.22",
+    "eslint": "^8.38.0",
+    "supertest": "^6.3.3"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "author": "Windsurf+SWE-1",
+  "license": "UNLICENSED",
+  "private": true
+}
