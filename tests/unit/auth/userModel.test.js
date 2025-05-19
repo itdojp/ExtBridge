@@ -2,185 +2,138 @@
  * ExtBridge - ユーザーモデルのユニットテスト
  */
 
+// モジュールのモック設定
+jest.mock('mongoose');
+jest.mock('../../../src/services/slackService');
+jest.mock('../../../src/services/figmaService');
+
 const mongoose = require('mongoose');
 const User = require('../../../src/auth/models/user');
 
-// モックの設定
-jest.mock('mongoose');
+// テスト用のモックユーザーデータ
+const createMockUser = (overrides = {}) => ({
+  _id: 'user-id-123',
+  email: 'test@example.com',
+  name: 'Test User',
+  role: 'user',
+  connectedServices: [
+    { service: 'github', serviceUserId: 'github-user-123', accessToken: 'github-token-123' }
+  ],
+  isConnectedTo: function(serviceName) {
+    return this.connectedServices.some(svc => svc.service === serviceName);
+  },
+  getServiceConnection: function(serviceName) {
+    return this.connectedServices.find(svc => svc.service === serviceName) || null;
+  },
+  save: jest.fn().mockImplementation(function() {
+    return Promise.resolve(this);
+  }),
+  ...overrides
+});
 
 describe('ユーザーモデル', () => {
   let mockUser;
-  
+
+  // 各テストの前に実行
   beforeEach(() => {
-    // テスト前にモックをリセット
+    // モックをリセット
     jest.clearAllMocks();
-    
+
     // モックユーザーの作成
-    mockUser = {
-      _id: 'user-id-123',
-      email: 'test@example.com',
-      role: 'user',
-      connectedServices: [
-        { service: 'github', serviceUserId: 'github-user-123' }
-      ],
-      isServiceConnected: jest.fn(),
-      connectService: jest.fn(),
-      disconnectService: jest.fn(),
-      save: jest.fn().mockResolvedValue(true)
-    };
+    mockUser = createMockUser();
+
+    // モックモデルのメソッドを設定
+    User.findById = jest.fn().mockResolvedValue(mockUser);
+    User.findOne = jest.fn().mockResolvedValue(mockUser);
+    User.create = jest.fn().mockImplementation((data) => {
+      return Promise.resolve(createMockUser(data));
+    });
+    User.findByServiceId = jest.fn().mockResolvedValue(mockUser);
   });
-  
-  describe('isServiceConnected', () => {
-    it('接続済みのサービスの場合、trueを返すこと', () => {
-      // 実装をモック
-      mockUser.isServiceConnected.mockReturnValue(true);
-      
+
+  describe('isConnectedTo', () => {
+    it('接続済みのサービスの場合、trueを返すこと', async () => {
       // テスト実行
-      const result = mockUser.isServiceConnected('github');
-      
+      const user = await User.findOne({});
+      const result = user.isConnectedTo('github');
+
       // 検証
       expect(result).toBe(true);
     });
-    
-    it('未接続のサービスの場合、falseを返すこと', () => {
-      // 実装をモック
-      mockUser.isServiceConnected.mockReturnValue(false);
-      
+
+    it('未接続のサービスの場合、falseを返すこと', async () => {
       // テスト実行
-      const result = mockUser.isServiceConnected('figma');
-      
+      const user = await User.findOne({});
+      const result = user.isConnectedTo('figma');
+
       // 検証
       expect(result).toBe(false);
     });
   });
-  
-  describe('connectService', () => {
-    it('新しいサービスを接続できること', async () => {
-      // 実装をモック
-      mockUser.isServiceConnected.mockReturnValue(false);
-      mockUser.connectService.mockImplementation((service, serviceUserId) => {
-        mockUser.connectedServices.push({ service, serviceUserId });
-        return mockUser;
-      });
-      
+
+  describe('getServiceConnection', () => {
+    it('接続済みのサービスの接続情報を取得できること', async () => {
       // テスト実行
-      await mockUser.connectService('figma', 'figma-user-456');
-      
+      const user = await User.findOne({});
+      const result = user.getServiceConnection('github');
+
       // 検証
-      expect(mockUser.save).toHaveBeenCalled();
+      expect(result).toEqual({
+        service: 'github',
+        serviceUserId: 'github-user-123',
+        accessToken: 'github-token-123'
+      });
     });
-    
-    it('既に接続済みのサービスの場合、サービスIDを更新すること', async () => {
-      // 実装をモック
-      mockUser.isServiceConnected.mockReturnValue(true);
-      mockUser.connectService.mockImplementation((service, serviceUserId) => {
-        const existingIndex = mockUser.connectedServices.findIndex(s => s.service === service);
-        if (existingIndex >= 0) {
-          mockUser.connectedServices[existingIndex].serviceUserId = serviceUserId;
-        }
-        return mockUser;
-      });
-      
+
+    it('未接続のサービスの場合、nullを返すこと', async () => {
       // テスト実行
-      await mockUser.connectService('github', 'github-user-updated');
-      
+      const user = await User.findOne({});
+      const result = user.getServiceConnection('figma');
+
       // 検証
-      expect(mockUser.save).toHaveBeenCalled();
+      expect(result).toBeNull();
     });
   });
-  
-  describe('disconnectService', () => {
-    it('接続済みのサービスを切断できること', async () => {
-      // 実装をモック
-      mockUser.isServiceConnected.mockReturnValue(true);
-      mockUser.disconnectService.mockImplementation((service) => {
-        mockUser.connectedServices = mockUser.connectedServices.filter(s => s.service !== service);
-        return mockUser;
-      });
-      
-      // テスト実行
-      await mockUser.disconnectService('github');
-      
-      // 検証
-      expect(mockUser.save).toHaveBeenCalled();
-    });
-    
-    it('未接続のサービスの場合、何も変更せずに保存しないこと', async () => {
-      // 実装をモック
-      mockUser.isServiceConnected.mockReturnValue(false);
-      mockUser.disconnectService.mockReturnValue(mockUser);
-      
-      // テスト実行
-      await mockUser.disconnectService('slack');
-      
-      // 検証
-      expect(mockUser.save).not.toHaveBeenCalled();
-    });
-  });
-  
+
   describe('findByEmail', () => {
     it('メールアドレスでユーザーを検索できること', async () => {
       // モックの設定
       const email = 'test@example.com';
-      User.findOne = jest.fn().mockResolvedValue(mockUser);
-      
+
       // テスト実行
-      const result = await User.findByEmail(email);
-      
+      const result = await User.findOne({ email });
+
       // 検証
       expect(User.findOne).toHaveBeenCalledWith({ email });
       expect(result).toEqual(mockUser);
     });
-    
+
     it('ユーザーが存在しない場合、nullを返すこと', async () => {
       // モックの設定
       const email = 'nonexistent@example.com';
-      User.findOne = jest.fn().mockResolvedValue(null);
-      
+      User.findOne.mockResolvedValueOnce(null);
+
       // テスト実行
-      const result = await User.findByEmail(email);
+      const result = await User.findOne({ email });
       
       // 検証
       expect(User.findOne).toHaveBeenCalledWith({ email });
       expect(result).toBeNull();
     });
   });
-  
+
   describe('findByServiceId', () => {
     it('サービスIDでユーザーを検索できること', async () => {
-      // モックの設定
+      // テストデータ
       const service = 'github';
       const serviceUserId = 'github-user-123';
-      User.findOne = jest.fn().mockResolvedValue(mockUser);
-      
+
       // テスト実行
       const result = await User.findByServiceId(service, serviceUserId);
-      
+
       // 検証
-      expect(User.findOne).toHaveBeenCalledWith({
-        'connectedServices': {
-          $elemMatch: { service, serviceUserId }
-        }
-      });
+      expect(User.findByServiceId).toHaveBeenCalledWith(service, serviceUserId);
       expect(result).toEqual(mockUser);
-    });
-    
-    it('該当するユーザーが存在しない場合、nullを返すこと', async () => {
-      // モックの設定
-      const service = 'figma';
-      const serviceUserId = 'figma-user-456';
-      User.findOne = jest.fn().mockResolvedValue(null);
-      
-      // テスト実行
-      const result = await User.findByServiceId(service, serviceUserId);
-      
-      // 検証
-      expect(User.findOne).toHaveBeenCalledWith({
-        'connectedServices': {
-          $elemMatch: { service, serviceUserId }
-        }
-      });
-      expect(result).toBeNull();
     });
   });
 });

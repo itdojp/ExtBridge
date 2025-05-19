@@ -9,7 +9,11 @@ module.exports = {
   // テストファイルのパターン
   testMatch: [
     '**/tests/**/*.test.js',
-    '**/tests/**/*.spec.js'
+    '**/tests/**/*.spec.js',
+    '**/test/**/*.test.js',
+    '**/test/**/*.spec.js',
+    '**/*.test.js',
+    '**/*.spec.js'
   ],
   
   // カバレッジ設定

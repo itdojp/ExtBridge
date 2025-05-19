@@ -32,11 +32,20 @@ describe('Extic連携の統合テスト', () => {
     await testUser.save();
     
     // 認証トークンの生成
+    const mockJwtSecret = 'test-secret-key';
     authToken = jwt.sign(
       { id: testUser._id, email: testUser.email, role: testUser.role },
-      process.env.JWT_SECRET,
+      mockJwtSecret,
       { expiresIn: '1h' }
     );
+    
+    // JWT検証のモック
+    jest.spyOn(jwt, 'verify').mockImplementation((token, secret) => {
+      if (token === authToken && secret === mockJwtSecret) {
+        return { id: testUser._id, email: testUser.email, role: testUser.role };
+      }
+      throw new Error('Invalid token');
+    });
   });
   
   afterAll(async () => {

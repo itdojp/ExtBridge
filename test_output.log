@@ -1,0 +1,54 @@
+FAIL tests/unit/extic/simpleExtic.test.js
+  笳・Test suite failed to run
+
+    Cannot find module '../../../src/monitoring/app-monitoring' from 'tests/unit/extic/simpleExtic.test.js'
+
+      19 |
+      20 | // logger繝｢繧ｸ繝･繝ｼ繝ｫ繧偵Δ繝・け
+    > 21 | jest.mock('../../../src/monitoring/app-monitoring', () => ({
+         |      ^
+      22 |   logger: {
+      23 |     error: jest.fn()
+      24 |   }
+
+      at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
+      at Object.mock (tests/unit/extic/simpleExtic.test.js:21:6)
+
+--------------------------|---------|----------|---------|---------|-------------------
+File                      | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+--------------------------|---------|----------|---------|---------|-------------------
+All files                 |       0 |        0 |       0 |       0 |                   
+ src                      |       0 |        0 |       0 |       0 |                   
+  config.js               |       0 |        0 |     100 |       0 | 8-76              
+  index.js                |       0 |        0 |       0 |       0 | 6-87              
+ src/auth/controllers     |       0 |        0 |       0 |       0 |                   
+  exticSamlController.js  |       0 |        0 |       0 |       0 | 7-132             
+  samlController.js       |       0 |        0 |       0 |       0 | 6-177             
+ src/auth/middleware      |       0 |        0 |       0 |       0 |                   
+  authMiddleware.js       |       0 |        0 |       0 |       0 | 6-100             
+ src/auth/models          |       0 |      100 |       0 |       0 |                   
+  user.js                 |       0 |      100 |       0 |       0 | 6-109             
+ src/auth/routes          |       0 |      100 |       0 |       0 |                   
+  index.js                |       0 |      100 |       0 |       0 | 6-33              
+ src/services/controllers |       0 |        0 |       0 |       0 |                   
+  figmaController.js      |       0 |        0 |       0 |       0 | 6-297             
+  githubController.js     |       0 |        0 |       0 |       0 | 6-234             
+  slackController.js      |       0 |        0 |       0 |       0 | 6-324             
+ src/services/extic       |       0 |        0 |       0 |       0 |                   
+  exticClient.js          |       0 |        0 |       0 |       0 | 7-121             
+ src/services/figma       |       0 |        0 |       0 |       0 |                   
+  figmaClient.js          |       0 |        0 |       0 |       0 | 6-144             
+ src/services/github      |       0 |        0 |       0 |       0 |                   
+  githubClient.js         |       0 |        0 |       0 |       0 | 6-137             
+ src/services/routes      |       0 |      100 |     100 |       0 |                   
+  index.js                |       0 |      100 |     100 |       0 | 6-40              
+ src/services/slack       |       0 |        0 |       0 |       0 |                   
+  slackClient.js          |       0 |        0 |       0 |       0 | 6-158             
+ src/utils                |       0 |        0 |     100 |       0 |                   
+  logger.js               |       0 |        0 |     100 |       0 | 6-55              
+--------------------------|---------|----------|---------|---------|-------------------
+Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        2.848 s
+Ran all test suites matching /tests\\unit\\extic\\simpleExtic.test.js/i.

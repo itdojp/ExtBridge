@@ -42,9 +42,12 @@ describe('SAMLコントローラー', () => {
     passport.authenticate = jest.fn((strategy, options, callback) => {
       return (req, res, next) => {
         if (callback) {
-          callback(null, req.user);
+          callback(null, req.user, () => {
+            next();
+          });
+        } else {
+          next();
         }
-        return next();
       };
     });
     

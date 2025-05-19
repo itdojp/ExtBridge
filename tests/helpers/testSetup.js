@@ -8,6 +8,98 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { setupExticMock, cleanupExticMock } = require('../mocks/exticMock');
+const serviceClientsMock = require('../mocks/serviceClientsMock');
+
+// モックの設定
+jest.mock('../services/github/githubClient', () => {
+  const mockGitHubClient = {
+    get: jest.fn().mockImplementation((url) => {
+      if (url === '/user') {
+        return Promise.resolve({
+          data: {
+            id: 'github-user-id',
+            login: 'test-user',
+            name: 'Test User',
+            email: 'test@example.com'
+          }
+        });
+      }
+      if (url === '/user/repos') {
+        return Promise.resolve({
+          data: [{
+            id: 'repo1',
+            name: 'test-repo',
+            full_name: 'test-user/test-repo',
+            html_url: 'https://github.com/test-user/test-repo'
+          }]
+        });
+      }
+      return Promise.reject(new Error('Invalid GitHub API request'));
+    })
+  };
+  return {
+    GitHubClient: jest.fn().mockImplementation(() => mockGitHubClient)
+  };
+});
+
+jest.mock('../services/figma/figmaClient', () => {
+  const mockFigmaClient = {
+    me: jest.fn().mockResolvedValue({
+      id: 'figma-user-id',
+      handle: 'test-user',
+      email: 'test@example.com',
+      name: 'Test User'
+    }),
+    files: jest.fn().mockResolvedValue([{
+      id: 'file1',
+      name: 'Test File',
+      lastModified: new Date().toISOString(),
+      thumbnailUrl: 'https://example.com/thumbnail.png'
+    }])
+  };
+  return {
+    FigmaClient: jest.fn().mockImplementation(() => mockFigmaClient)
+  };
+});
+
+jest.mock('../services/slack/slackClient', () => {
+  const mockSlackClient = {
+    auth: {
+      test: jest.fn().mockResolvedValue({
+        ok: true,
+        user_id: 'slack-user-id',
+        user: 'test-user',
+        team: 'test-team',
+        url: 'https://slack.com'
+      })
+    },
+    users: {
+      profile: {
+        get: jest.fn().mockResolvedValue({
+          ok: true,
+          profile: {
+            email: 'test@example.com',
+            real_name: 'Test User',
+            display_name: 'Test User'
+          }
+        })
+      }
+    },
+    conversations: {
+      list: jest.fn().mockResolvedValue({
+        ok: true,
+        channels: [{
+          id: 'channel1',
+          name: 'general',
+          is_channel: true
+        }]
+      })
+    }
+  };
+  return {
+    SlackClient: jest.fn().mockImplementation(() => mockSlackClient)
+  };
+});
 
 let mongoServer;
 
@@ -49,6 +141,13 @@ async function setupTestEnvironment(options = { useMongoMemory: true, mockExtic:
   
   // サービス接続用の環境変数
   process.env.GITHUB_CLIENT_ID = 'github-test-client-id';
+  process.env.GITHUB_CLIENT_SECRET = 'github-test-client-secret';
+  
+  process.env.FIGMA_CLIENT_ID = 'figma-test-client-id';
+  process.env.FIGMA_CLIENT_SECRET = 'figma-test-client-secret';
+  
+  process.env.SLACK_CLIENT_ID = 'slack-test-client-id';
+  process.env.SLACK_CLIENT_SECRET = 'slack-test-client-secret';
   process.env.GITHUB_CLIENT_SECRET = 'github-test-client-secret';
   process.env.GITHUB_CALLBACK_URL = 'https://extbridge-test.example.com/api/services/github/callback';
   

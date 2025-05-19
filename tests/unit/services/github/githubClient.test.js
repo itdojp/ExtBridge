@@ -6,7 +6,19 @@ const axios = require('axios');
 const GitHubClient = require('../../../../src/services/github/githubClient');
 
 // axiosのモック
-jest.mock('axios');
+jest.mock('axios', () => {
+  return {
+    create: jest.fn().mockImplementation(() => ({
+      get: jest.fn(),
+      post: jest.fn(),
+      put: jest.fn(),
+      delete: jest.fn(),
+      defaults: {
+        headers: {}
+      }
+    }))
+  };
+});
 
 describe('GitHubClient', () => {
   let githubClient;
@@ -44,13 +56,24 @@ describe('GitHubClient', () => {
         }
       };
       
-      axios.get.mockResolvedValue(mockResponse);
+      // モックの設定
+      const mockGet = jest.fn().mockResolvedValue(mockResponse);
+      const mockAxiosInstance = {
+        get: mockGet,
+        defaults: {
+          headers: {}
+        }
+      };
       
-      // メソッド実行
-      const result = await githubClient.getUserInfo();
+      // axios.createのモックを設定
+      require('axios').create.mockReturnValue(mockAxiosInstance);
+      
+      // 新しいインスタンスを作成してテスト
+      const client = new GitHubClient('test-token');
+      const result = await client.getUserInfo();
       
       // 検証
-      expect(axios.get).toHaveBeenCalledWith('/user');
+      expect(mockGet).toHaveBeenCalledWith('/user');
       expect(result).toEqual(mockResponse.data);
     });
     
