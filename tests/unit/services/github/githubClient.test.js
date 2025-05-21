@@ -3,7 +3,7 @@
  */
 
 const axios = require('axios');
-const GitHubClient = require('../../../../src/services/github/githubClient');
+const GitHubClient = require('@services/github/githubClient');
 
 // axiosのモック
 jest.mock('axios', () => {

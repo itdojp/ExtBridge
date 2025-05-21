@@ -6,8 +6,8 @@ const ExticClient = require('../../../src/services/extic/exticClient');
 jest.mock('axios');
 
 // Mock config and app-monitoring
-jest.mock('config');
-jest.mock('../../monitoring/app-monitoring');
+jest.mock('../../../src/config');
+jest.mock('../../../src/monitoring/app-monitoring');
 
 describe('ExticClient Simple Test', () => {
   let mockAxiosInstance;

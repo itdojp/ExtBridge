@@ -10,7 +10,7 @@ const User = require('../../src/auth/models/user');
 const config = require('../../config/default');
 
 // モックの設定
-jest.mock('../../src/services/github/githubClient');
+jest.mock('@services/github/githubClient');
 jest.mock('../../src/services/figma/figmaClient');
 jest.mock('../../src/services/slack/slackClient');
 

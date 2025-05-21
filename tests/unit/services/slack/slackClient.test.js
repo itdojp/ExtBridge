@@ -239,7 +239,7 @@ describe('SlackClient', () => {
       axios.post.mockResolvedValue(mockResponse);
       
       // メソッド実行
-      const result = await slackClient.postMessage(channelId, text);
+      const result = await slackClient.sendMessage(channelId, text);
       
       // 検証
       expect(axios.post).toHaveBeenCalledWith('/chat.postMessage', {
@@ -268,7 +268,7 @@ describe('SlackClient', () => {
       };
       
       // メソッド実行
-      await slackClient.postMessage(channelId, text, options);
+      await slackClient.sendMessage(channelId, text, options);
       
       // 検証
       expect(axios.post).toHaveBeenCalledWith('/chat.postMessage', {
@@ -291,7 +291,7 @@ describe('SlackClient', () => {
       axios.post.mockResolvedValue(mockResponse);
       
       // メソッド実行と検証
-      await expect(slackClient.postMessage(channelId, text)).rejects.toThrow('Slack API エラー: channel_not_found');
+      await expect(slackClient.sendMessage(channelId, text)).rejects.toThrow('Slack API エラー: channel_not_found');
     });
     
     it('ネットワークエラー時に例外をスローすること', async () => {
@@ -300,7 +300,7 @@ describe('SlackClient', () => {
       axios.post.mockRejectedValue(mockError);
       
       // メソッド実行と検証
-      await expect(slackClient.postMessage(channelId, text)).rejects.toThrow('Slack メッセージ投稿エラー');
+      await expect(slackClient.sendMessage(channelId, text)).rejects.toThrow('Slack メッセージ投稿エラー');
     });
   });
 });

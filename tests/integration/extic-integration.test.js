@@ -12,6 +12,28 @@ const { setupTestEnvironment, teardownTestEnvironment } = require('../helpers/te
 const app = require('../../src/index');
 const User = require('../../src/auth/models/user');
 
+// GitHubクライアントのモック
+const mockGitHubClient = {
+  get: jest.fn().mockImplementation((url) => {
+    if (url === '/user') {
+      return Promise.resolve({
+        data: {
+          id: 'github-user-id',
+          login: 'test-user',
+          name: 'Test User',
+          email: 'test@example.com'
+        }
+      });
+    }
+    return Promise.reject(new Error('Not Found'));
+  })
+};
+
+// GitHubクライアントのモックを設定
+jest.mock('@services/github/githubClient', () => {
+  return jest.fn().mockImplementation(() => mockGitHubClient);
+});
+
 describe('Extic連携の統合テスト', () => {
   let testUser;
   let authToken;

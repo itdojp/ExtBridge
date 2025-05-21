@@ -1,6 +1,4 @@
-// Import required modules
-const { describe, it, expect } = require('@jest/globals');
-
+// Jestのグローバル関数を使用
 console.log('Basic test is running');
 
 describe('Basic Test', () => {
@@ -9,8 +7,8 @@ describe('Basic Test', () => {
     expect(1 + 1).toBe(2);
   });
 
-  it('should fail intentionally', () => {
-    console.log('Running failing test');
+  it('should pass another test', () => {
+    console.log('Running another test');
     expect(1 + 1).not.toBe(3);
   });
 });
